@@ -26,7 +26,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
 export async function PUT(_request: Request, { params }: RouteParams) {
 	try {
-		const json = await request.json();
+		const json = await _request.json();
 		const post = await prisma.post.update({
 			where: {
 				id: params.id
