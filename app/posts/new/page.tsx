@@ -24,16 +24,25 @@ export default function NewPostPage() {
 				body: JSON.stringify({ title, content })
 			});
 
-			const data = await response.json();
+			console.log('Response status:', response.status, response.statusText);
+
+			const responseText = await response.text();
+			console.log('Response text:', responseText);
+
+			const data = responseText ? JSON.parse(responseText) : null;
 
 			if (!response.ok) {
-				throw new Error(data.message || 'Failed to create post');
+				throw new Error(data?.message || `Server error: ${response.status}`);
 			}
 
 			router.push('/posts');
 			router.refresh();
 		} catch (error) {
-			console.error('Error creating post:', error);
+			console.error('Error details:', {
+				name: error.name,
+				message: error.message,
+				stack: error.stack
+			});
 			setError(error instanceof Error ? error.message : 'Failed to create post. Please try again.');
 		} finally {
 			setIsLoading(false);

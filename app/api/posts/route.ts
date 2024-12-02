@@ -1,44 +1,38 @@
-import { getAuth } from '@clerk/nextjs/server';
-import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 
-// CREATE
-export async function POST(request: NextRequest) {
-	const { userId } = getAuth(request);
-
-	if (!userId) {
-		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-	}
-
+export async function POST(request: Request) {
 	try {
-		const json = await request.json();
+		// Log the incoming request
+		console.log('Received POST request to /api/posts');
+
+		// Parse the request body
+		const body = await request.json();
+		console.log('Request body:', body);
+
+		// Validate the input
+		if (!body.title || !body.content) {
+			console.log('Validation failed: Missing title or content');
+			return NextResponse.json({ message: 'Title and content are required' }, { status: 400 });
+		}
+
+		// Create the post
 		const post = await prisma.post.create({
 			data: {
-				...json,
-				userId,
-				author: json.author || userId
+				title: body.title,
+				content: body.content
 			}
 		});
 
-		return NextResponse.json(post);
+		console.log('Post created successfully:', post);
+		return NextResponse.json(post, { status: 201 });
 	} catch (error) {
-		console.error('Request error', error);
-		return NextResponse.json({ error: 'Error creating post' }, { status: 500 });
-	}
-}
+		// Log the full error
+		console.error('Server error in POST /api/posts:', error);
 
-// READ (Get all posts)
-export async function GET() {
-	try {
-		const posts = await prisma.post.findMany({
-			orderBy: {
-				createdAt: 'desc'
-			}
-		});
-		return NextResponse.json(posts);
-	} catch (error) {
-		console.error('Request error', error);
-		return NextResponse.json({ error: 'Error fetching posts' }, { status: 500 });
+		return NextResponse.json(
+			{ message: 'Internal server error', error: (error as Error).message },
+			{ status: 500 }
+		);
 	}
 }
