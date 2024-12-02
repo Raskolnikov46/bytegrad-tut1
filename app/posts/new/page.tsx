@@ -37,11 +37,11 @@ export default function NewPostPage() {
 
 			router.push('/posts');
 			router.refresh();
-		} catch (error) {
+		} catch (error: unknown) {
 			console.error('Error details:', {
-				name: error.name,
-				message: error.message,
-				stack: error.stack
+				name: error instanceof Error ? error.name : 'Unknown',
+				message: error instanceof Error ? error.message : 'Unknown error occurred',
+				stack: error instanceof Error ? error.stack : undefined
 			});
 			setError(error instanceof Error ? error.message : 'Failed to create post. Please try again.');
 		} finally {

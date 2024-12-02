@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 
 export default async function Post({ params }: { params: { id: string } }) {
