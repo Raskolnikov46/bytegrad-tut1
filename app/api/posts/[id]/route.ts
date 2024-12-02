@@ -12,7 +12,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
 			return NextResponse.json({ error: 'Post not found' }, { status: 404 });
 		}
 		return NextResponse.json(post);
-	} catch (error) {
+	} catch (err) {
+		console.error('Error fetching post:', err);
 		return NextResponse.json({ error: 'Error fetching post' }, { status: 500 });
 	}
 }
@@ -27,7 +28,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 			data: json
 		});
 		return NextResponse.json(post);
-	} catch (error) {
+	} catch (err) {
+		console.error('Error updating post:', err);
 		return NextResponse.json({ error: 'Error updating post' }, { status: 500 });
 	}
 }
@@ -40,7 +42,8 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 			}
 		});
 		return NextResponse.json({ message: 'Post deleted' });
-	} catch (error) {
+	} catch (err) {
+		console.error('Error deleting post:', err);
 		return NextResponse.json({ error: 'Error deleting post' }, { status: 500 });
 	}
 }
