@@ -9,7 +9,8 @@ export async function GET() {
 			}
 		});
 		return NextResponse.json(posts);
-	} catch (error) {
+	} catch (err) {
+		console.error('Error fetching posts:', err);
 		return NextResponse.json({ error: 'Error fetching posts' }, { status: 500 });
 	}
 }
@@ -25,7 +26,8 @@ export async function POST(request: Request) {
 			}
 		});
 		return NextResponse.json(post);
-	} catch (error) {
+	} catch (err) {
+		console.error('Error creating post:', err);
 		return NextResponse.json({ error: 'Error creating post' }, { status: 500 });
 	}
 }

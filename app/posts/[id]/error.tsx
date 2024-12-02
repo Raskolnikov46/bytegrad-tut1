@@ -1,7 +1,6 @@
 'use client';
 
 export default function Error({
-	error,
 	reset
 }: {
 	error: Error & { digest?: string };
@@ -11,7 +10,9 @@ export default function Error({
 		<main className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
 			<div className="text-center">
 				<h1 className="text-4xl font-bold text-red-600 mb-4">Oops! Something went wrong</h1>
-				<p className="text-gray-600 text-lg mb-8">We couldn't load the post you're looking for.</p>
+				<p className="text-gray-600 text-lg mb-8">
+					We couldn&apos;t load the post you&apos;re looking for.
+				</p>
 				<div className="space-x-4">
 					<button
 						onClick={() => reset()}
