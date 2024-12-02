@@ -4,6 +4,7 @@ import './globals.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Providers } from './providers';
+import { ClerkProvider } from '@clerk/nextjs';
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -51,16 +52,32 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<body
-				className={`${inter.variable} ${righteous.variable} antialiased min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}
-			>
-				<Providers>
-					<Navbar />
-					<main className="flex-grow">{children}</main>
-					<Footer />
-				</Providers>
-			</body>
-		</html>
+		<ClerkProvider
+			appearance={{
+				variables: {
+					colorPrimary: 'rgb(59 130 246)',
+					colorTextOnPrimaryBackground: 'white'
+				},
+				elements: {
+					formButtonPrimary: 'bg-blue-500 hover:bg-blue-600 text-white',
+					footerActionLink: 'text-blue-500 hover:text-blue-600',
+					card: 'dark:bg-gray-800',
+					headerTitle: 'dark:text-gray-100',
+					headerSubtitle: 'dark:text-gray-400'
+				}
+			}}
+		>
+			<html lang="en" suppressHydrationWarning>
+				<body
+					className={`${inter.variable} ${righteous.variable} antialiased min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}
+				>
+					<Providers>
+						<Navbar />
+						<main className="flex-grow">{children}</main>
+						<Footer />
+					</Providers>
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }
