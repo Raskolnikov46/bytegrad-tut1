@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+interface RouteParams {
+	params: {
+		id: string;
+	};
+}
+
+export async function GET(_request: Request, { params }: RouteParams) {
 	try {
 		const post = await prisma.post.findUnique({
 			where: {
@@ -18,7 +24,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 	}
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(_request: Request, { params }: RouteParams) {
 	try {
 		const json = await request.json();
 		const post = await prisma.post.update({
@@ -34,7 +40,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 	}
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_request: Request, { params }: RouteParams) {
 	try {
 		await prisma.post.delete({
 			where: {
