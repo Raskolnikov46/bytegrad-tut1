@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 
 interface PostFormProps {
 	initialData?: {
@@ -13,6 +14,7 @@ interface PostFormProps {
 
 export default function PostForm({ initialData }: PostFormProps) {
 	const router = useRouter();
+	const { user } = useUser();
 	const [loading, setLoading] = useState(false);
 	const [title, setTitle] = useState(initialData?.title || '');
 	const [content, setContent] = useState(initialData?.content || '');
@@ -32,7 +34,12 @@ export default function PostForm({ initialData }: PostFormProps) {
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ title, content })
+				body: JSON.stringify({
+					title,
+					content,
+					author: user?.fullName || 'Anonymous',
+					authorId: user?.id
+				})
 			});
 
 			if (!response.ok) {
@@ -40,7 +47,6 @@ export default function PostForm({ initialData }: PostFormProps) {
 			}
 
 			router.push('/posts');
-			router.refresh();
 		} catch (error) {
 			console.error(error);
 		} finally {

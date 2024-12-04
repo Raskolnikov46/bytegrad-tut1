@@ -1,50 +1,41 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { cache } from 'react';
-
-export const revalidate = 60; // Revalidate every 60 seconds
-
-const getRecentPosts = cache(async () => {
-	return await prisma.post.findMany({
-		take: 3,
-		orderBy: {
-			createdAt: 'desc'
-		}
-	});
-});
+import { auth, currentUser } from '@clerk/nextjs/server';
 
 export async function POST(request: Request) {
 	try {
-		// Log the incoming request
-		console.log('Received POST request to /api/posts');
+		const { userId } = await auth();
+		const user = await currentUser();
 
-		// Parse the request body
+		if (!userId || !user) {
+			return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+		}
+
 		const body = await request.json();
-		console.log('Request body:', body);
 
-		// Validate the input
 		if (!body.title || !body.content) {
-			console.log('Validation failed: Missing title or content');
 			return NextResponse.json({ message: 'Title and content are required' }, { status: 400 });
 		}
 
-		// Create the post
+		// Use the user's full name, or fallback to their first name, or email
+		const authorName =
+			`${user.firstName} ${user.lastName}`.trim() ||
+			user.firstName ||
+			user.emailAddresses[0].emailAddress;
+
 		const post = await prisma.post.create({
 			data: {
 				title: body.title,
 				content: body.content,
-				userId: 'default_user',
+				userId: userId,
 				slug: body.title.toLowerCase().replace(/\s+/g, '-'),
-				author: 'Anonymous'
+				author: authorName
 			}
 		});
 
-		console.log('Post created successfully:', post);
 		return NextResponse.json(post, { status: 201 });
 	} catch (error) {
-		// Log the full error
 		console.error('Server error in POST /api/posts:', error);
-
 		return NextResponse.json(
 			{ message: 'Internal server error', error: (error as Error).message },
 			{ status: 500 }
