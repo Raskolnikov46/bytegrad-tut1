@@ -2,11 +2,23 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 
-export default async function PostPage({ params }: { params: { id: string } }) {
+interface PageParams {
+	params: Promise<{
+		id: string;
+	}>;
+	searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default async function PostPage({ params }: PageParams) {
+	// Await the params
+	const { id } = await params;
+
+	if (!id) {
+		notFound();
+	}
+
 	const post = await prisma.post.findUnique({
-		where: {
-			id: params.id
-		}
+		where: { id }
 	});
 
 	if (!post) {
