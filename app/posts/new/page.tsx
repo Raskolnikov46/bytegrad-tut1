@@ -36,14 +36,15 @@ export default function NewPostPage() {
 			}
 
 			router.push('/posts');
-			router.refresh();
-		} catch (error) {
+			// router.refresh();
+		} catch (err: unknown) {
+			const error = err as Error;
 			console.error('Error details:', {
 				name: error.name,
 				message: error.message,
 				stack: error.stack
 			});
-			setError(error instanceof Error ? error.message : 'Failed to create post. Please try again.');
+			setError(error.message || 'Failed to create post. Please try again.');
 		} finally {
 			setIsLoading(false);
 		}

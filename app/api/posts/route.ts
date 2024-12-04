@@ -20,7 +20,10 @@ export async function POST(request: Request) {
 		const post = await prisma.post.create({
 			data: {
 				title: body.title,
-				content: body.content
+				content: body.content,
+				userId: 'default_user',
+				slug: body.title.toLowerCase().replace(/\s+/g, '-'),
+				author: 'Anonymous'
 			}
 		});
 
