@@ -1,5 +1,17 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { cache } from 'react';
+
+export const revalidate = 60; // Revalidate every 60 seconds
+
+const getRecentPosts = cache(async () => {
+	return await prisma.post.findMany({
+		take: 3,
+		orderBy: {
+			createdAt: 'desc'
+		}
+	});
+});
 
 export async function POST(request: Request) {
 	try {

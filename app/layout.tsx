@@ -66,6 +66,7 @@ export default function RootLayout({
 					headerSubtitle: 'dark:text-gray-400'
 				}
 			}}
+			dynamic
 		>
 			<html lang="en" suppressHydrationWarning>
 				<body

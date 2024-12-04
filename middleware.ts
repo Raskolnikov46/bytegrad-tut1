@@ -1,26 +1,20 @@
-import { authMiddleware } from '@clerk/nextjs';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 // Define public routes that don't require authentication
-const publicRoutes = [
-	'/',
-	'/posts',
-	'/api/posts',
-	// Add specific patterns for reading posts
-	'/posts/(.*)'
-];
+const isPublicRoute = createRouteMatcher(['/', '/posts(.*)', '/api/posts(.*)']);
 
-export default authMiddleware({
-	publicRoutes,
-	// Add ignoredRoutes for paths that should bypass middleware completely
-	ignoredRoutes: [
-		'/api/posts(.*)' // This will bypass auth checks for POST/PUT/DELETE operations
-	]
+export default clerkMiddleware(async (auth, request) => {
+	if (!isPublicRoute(request)) {
+		// Protect all non-public routes
+		await auth.protect();
+	}
 });
 
 export const config = {
 	matcher: [
-		'/((?!.*\\..*|_next).*)', // Don't run middleware on static files
-		'/', // Run middleware on index page
-		'/(api|trpc)(.*)' // Run middleware on API routes
+		// Exclude files with extensions and _next
+		'/((?!_next|.*\\.[\\w]+$).*)',
+		'/',
+		'/(api|trpc)(.*)'
 	]
 };

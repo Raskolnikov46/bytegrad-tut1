@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
+import PostSkeleton from '@/app/components/PostSkeleton';
 
-export default async function Post({ params }: { params: { id: string } }) {
+export default function Post({ params }: { params: { id: string } }) {
 	return (
 		<main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div className="max-w-3xl mx-auto pt-16">
@@ -37,20 +38,5 @@ async function PostContent({ id }: { id: string }) {
 			</div>
 			<p>{post.content}</p>
 		</article>
-	);
-}
-
-function PostSkeleton() {
-	return (
-		<div className="animate-pulse">
-			<div className="h-8 w-48 bg-gray-200 rounded mb-8" />
-			<div className="h-12 w-3/4 bg-gray-200 rounded mb-4" />
-			<div className="h-4 w-48 bg-gray-200 rounded mb-8" />
-			<div className="space-y-4">
-				<div className="h-4 bg-gray-200 rounded w-full" />
-				<div className="h-4 bg-gray-200 rounded w-full" />
-				<div className="h-4 bg-gray-200 rounded w-3/4" />
-			</div>
-		</div>
 	);
 }
