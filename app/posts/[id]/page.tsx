@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
+import { auth } from '@clerk/nextjs/server';
+import DeletePostButton from '@/app/components/DeletePostButton';
 
 interface PageParams {
 	params: Promise<{
@@ -10,8 +12,8 @@ interface PageParams {
 }
 
 export default async function PostPage({ params }: PageParams) {
-	// Await the params
 	const { id } = await params;
+	const { userId } = await auth();
 
 	if (!id) {
 		notFound();
@@ -28,9 +30,12 @@ export default async function PostPage({ params }: PageParams) {
 	return (
 		<main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<div className="max-w-3xl mx-auto pt-16">
-				<Link href="/posts" className="text-blue-600 mb-8 inline-block hover:text-blue-800">
-					← Back to all posts
-				</Link>
+				<div className="flex justify-between items-center mb-8">
+					<Link href="/posts" className="text-blue-600 hover:text-blue-800">
+						← Back to all posts
+					</Link>
+					{post.userId === userId && <DeletePostButton postId={post.id} />}
+				</div>
 				<article className="prose lg:prose-xl dark:prose-invert">
 					<h1>{post.title}</h1>
 					<div className="text-sm text-gray-500 mb-4">
