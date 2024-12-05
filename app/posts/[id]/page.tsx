@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import DeletePostButton from '@/app/components/DeletePostButton';
+import EditPostButton from '@/app/components/EditPostButton';
 
 interface PageParams {
 	params: Promise<{
@@ -34,7 +35,12 @@ export default async function PostPage({ params }: PageParams) {
 					<Link href="/posts" className="text-blue-600 hover:text-blue-800">
 						← Back to all posts
 					</Link>
-					{post.userId === userId && <DeletePostButton postId={post.id} />}
+					{post.userId === userId && (
+						<div className="flex space-x-2">
+							<EditPostButton postId={post.id} />
+							<DeletePostButton postId={post.id} />
+						</div>
+					)}
 				</div>
 				<article className="prose lg:prose-xl dark:prose-invert">
 					<h1>{post.title}</h1>

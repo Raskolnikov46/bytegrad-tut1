@@ -29,7 +29,7 @@ export default function Example() {
 					))}
 				</div>
 				<p className="mt-8 text-center text-sm/6 text-zinc-600 dark:text-zinc-500 md:order-1 md:mt-0">
-					&copy; 2024 Your Company, Inc. All rights reserved.
+					&copy; 2024 JT Inc. All rights reserved.
 				</p>
 			</div>
 		</footer>

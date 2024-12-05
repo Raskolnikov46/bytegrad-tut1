@@ -5,9 +5,11 @@ import { PostSchema } from '@/lib/validations/post';
 // READ (Get single post)
 export async function GET(req: Request, { params }: { params: { id: string } }) {
 	try {
+		const { id } = await params;
+
 		const post = await prisma.post.findUnique({
 			where: {
-				id: params.id
+				id
 			}
 		});
 
@@ -24,12 +26,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 // UPDATE
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
 	try {
+		const { id } = await params;
 		const json = await req.json();
 		const body = PostSchema.partial().parse(json);
 
 		const post = await prisma.post.update({
 			where: {
-				id: params.id
+				id
 			},
 			data: body
 		});
@@ -43,9 +46,11 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 // DELETE
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
 	try {
+		const { id } = await params;
+
 		await prisma.post.delete({
 			where: {
-				id: params.id
+				id
 			}
 		});
 
